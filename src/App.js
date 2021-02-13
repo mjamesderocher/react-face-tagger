@@ -1,7 +1,7 @@
 
 import './App.css'
 import image from './image.jpg'
-import { useState, useRef, useEffect } from 'react' 
+import { useState, useCallback, useEffect, useRef } from 'react' 
 import Box from './Box'
 
 const testFaces = [
@@ -12,17 +12,33 @@ const testFaces = [
 //Todo - Create a function that updates face postitions on mouseup
 
 function App() {
-  const containerRef = useRef(null)
   const [mouseStatus, setMouseStatus] = useState(undefined)
   const [faces, setFaces] = useState(testFaces)
   const [containerSize, setContainerSize] = useState({x: 0, y:0})
 
-  useEffect(() => {
-    setContainerSize({
-      x: containerRef.current.offsetWidth,
-      y: containerRef.current.offsetHeight
-    })
+  const containerRef = useRef(null)/*useCallback(node => {
+    if (node !== null) {
+      setContainerSize({
+        x: entry.contentRect.width,
+        y: entry.contentRect.height
+      })
+    }
+  }, [])*/
+
+  const ro = new ResizeObserver(entries => {
+    for (let entry of entries) {
+      setContainerSize({
+        x: entry.contentRect.width,
+        y: entry.contentRect.height
+      })
+    }
   })
+
+  useEffect(() => {
+    if(containerRef !== null) {
+      ro.observe(containerRef.current)
+    }
+  }, [])
 
   const faceBoxes = faces.map((face) =>
     <Box 
@@ -38,12 +54,11 @@ function App() {
 
   return (
     <div 
-      ref={containerRef}
       className="Container"
       onMouseMove={(event) => setMouseStatus(event)}
       onMouseUp={(event) => setMouseStatus(event)}
     >
-      <img src={image} />
+      <img ref={containerRef} src={image} />
       {faceBoxes}
     </div>
   )

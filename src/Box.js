@@ -5,15 +5,16 @@ import { useEffect } from 'react'
 const assignPoint = assign({
   px: (context, event) => event.clientX,
   py: (context, event) => event.clientY,
-});
+})
+
+const assignPointTouch = assign({
+  px: (context, event) => event.touches[0].clientX,
+  py: (context, event) => event.touches[0].clientY,
+})
 
 const assignPosition = assign({
-  x: (context, event) => {
-    return (context.x + (context.dx / event.containerSize.x))
-  },
-  y: (context, event) => {
-    return (context.y + (context.dy / event.containerSize.y))
-  },
+  x: (context, event) => context.x + (context.dx / event.containerSize.x),
+  y: (context, event) => context.y + (context.dy / event.containerSize.y),
   dx: 0,
   dy: 0,
   px: 0,
@@ -21,13 +22,14 @@ const assignPosition = assign({
 });
 
 const assignDelta = assign({
-  dx: (context, event) => {
-    return event.clientX - context.px
-  },
-  dy: (context, event) => {
-    return event.clientY - context.py
-  },
-});
+  dx: (context, event) => event.clientX - context.px,
+  dy: (context, event) => event.clientY - context.py,
+})
+
+const assignDeltaTouch = assign({
+  dx: (context, event) => event.touches[0].clientX - context.px,
+  dy: (context, event) => event.touches[0].clientY - context.py,
+})
 
 const showDelta = (context) => {
   //elBox.dataset.delta = `delta: ${context.dx}, ${context.dy}`
@@ -48,7 +50,8 @@ const machine = createMachine({
     dx: 0,
     dy: 0,
     px: 0,
-    py: 0
+    py: 0,
+    containerSize: {x: 0, y: 0}
   },
   states: {
     idle: {
@@ -58,7 +61,7 @@ const machine = createMachine({
           target: 'dragging',
         },
         touchstart: {
-          actions: assignPoint,
+          actions: assignPointTouch,
           target: 'dragging',
         },
       },
@@ -70,10 +73,14 @@ const machine = createMachine({
           // no target!
         },
         touchmove: {
-          actions: [assignDelta, showDelta],
+          actions: [assignDeltaTouch, showDelta],
           // no target!
         },
         mouseup: {
+          actions: assignPosition,
+          target: 'idle',
+        },
+        touchend: {
           actions: assignPosition,
           target: 'idle',
         },
@@ -84,11 +91,7 @@ const machine = createMachine({
       },
     },
   },
-});
-
-const service = interpret(machine);
-
-service.start()
+})
 
 const Box = (props) => {
   const { mouseStatus, x, y, title, containerSize } = props
@@ -100,7 +103,8 @@ const Box = (props) => {
       dx: 0,
       dy: 0,
       px: 0,
-      py: 0
+      py: 0,
+      containerSize: containerSize
     }
   })
 
@@ -125,7 +129,7 @@ const Box = (props) => {
       onMouseDown={(event) => send(event)}
       onTouchStart={(event) => send(event)}
       onTouchMove={(event) => send(event)}
-      onTouchEnd={(event) => send(event)}
+      onTouchEnd={(event) => send({...event, containerSize: containerSize})}
       data-state={state.value}
     >
       <div className="box">
@@ -136,4 +140,3 @@ const Box = (props) => {
 }
 
 export default Box
-
