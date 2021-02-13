@@ -1,38 +1,66 @@
-.App {
-  text-align: center;
+body {
+  height: 100vh;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+img {
+  width: 100%;
+  display: block;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+#root {
+  height: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.Container {
+  position: absolute;
+  overflow: hidden;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.box-wrapper {
+  position: absolute;
+  width: calc(var(--size) * 100%);
+  border: 8px solid #41a9f3;
+  left: calc(var(--x) * 100%);
+  top: calc(var(--y) * 100%);
+  transform: translate(calc(var(--dx) * 1px), calc(var(--dy) * 1px));
+  box-shadow: 0 0 0px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  user-select: none;
+}
+
+.box-label {
+  background-color: #41a9f3;
+  padding: 0 8px 8px 0;
+  margin: 0;
+  border-bottom-right-radius: 0.5rem;
+  display: inline-block;
+}
+
+.box-wrapper[data-state^='dragging'] {
+  opacity: 0.8;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.4);
+  z-index: 100;
+}
+
+.box-wrapper[data-state='idle'] {
+  transition: all 0.3s ease-in-out;
+}
+
+.box {
+  position: relative;
+  height: 0;
+  padding-bottom: 100%;
+}
+
+.resize {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -10px;
+  right: -10px;
+  background-color: gold;
 }
