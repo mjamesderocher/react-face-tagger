@@ -57,6 +57,7 @@ function App() {
       className="Container"
       onMouseMove={(event) => setMouseStatus(event)}
       onMouseUp={(event) => setMouseStatus(event)}
+      onMouseLeave={(event) => setMouseStatus(event)}
     >
       <img ref={containerRef} src={image} />
       {faceBoxes}

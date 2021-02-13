@@ -45,10 +45,7 @@ const assignDelta = assign({
 })
 
 const assignDeltaTouch = assign({
-  dx: (context, event) => {
-    console.log(context)
-    return event.touches[0].clientX - context.px
-  },
+  dx: (context, event) => event.touches[0].clientX - context.px,
   dy: (context, event) => event.touches[0].clientY - context.py,
 })
 
@@ -97,6 +94,10 @@ const machine = createMachine({
           // no target!
         },
         mouseup: {
+          actions: assignPosition,
+          target: 'idle',
+        },
+        mouseleave: {
           actions: assignPosition,
           target: 'idle',
         },
