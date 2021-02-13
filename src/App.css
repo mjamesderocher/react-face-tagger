@@ -20,6 +20,7 @@ img {
 }
 
 .box-wrapper {
+  box-sizing: border-box;
   position: absolute;
   width: calc(var(--size) * 100%);
   border: 8px solid #41a9f3;

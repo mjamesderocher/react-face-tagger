@@ -13,8 +13,24 @@ const assignPointTouch = assign({
 })
 
 const assignPosition = assign({
-  x: (context, event) => context.x + (context.dx / event.containerSize.x),
-  y: (context, event) => context.y + (context.dy / event.containerSize.y),
+  x: (context, event) => {
+    let pos = context.x + (context.dx / event.containerSize.x)
+    if ( pos < 0 ) {
+      return 0
+    } else if ( (pos + 0.12) > 1 ) {
+      return 0.88
+    }
+    return pos
+  },
+  y: (context, event) => {
+    let pos = context.y + (context.dy / event.containerSize.y)
+    if ( pos < 0 ) {
+      return 0
+    } else if ( (pos + 0.12) > 1 ) {
+      return 0.88
+    }
+    return pos
+  },
   dx: 0,
   dy: 0,
   px: 0,
@@ -22,12 +38,17 @@ const assignPosition = assign({
 });
 
 const assignDelta = assign({
-  dx: (context, event) => event.clientX - context.px,
+  dx: (context, event) => {
+    return event.clientX - context.px
+  },
   dy: (context, event) => event.clientY - context.py,
 })
 
 const assignDeltaTouch = assign({
-  dx: (context, event) => event.touches[0].clientX - context.px,
+  dx: (context, event) => {
+    console.log(context)
+    return event.touches[0].clientX - context.px
+  },
   dy: (context, event) => event.touches[0].clientY - context.py,
 })
 
@@ -50,8 +71,7 @@ const machine = createMachine({
     dx: 0,
     dy: 0,
     px: 0,
-    py: 0,
-    containerSize: {x: 0, y: 0}
+    py: 0
   },
   states: {
     idle: {
@@ -103,8 +123,7 @@ const Box = (props) => {
       dx: 0,
       dy: 0,
       px: 0,
-      py: 0,
-      containerSize: containerSize
+      py: 0
     }
   })
 
