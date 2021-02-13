@@ -1,5 +1,5 @@
 body {
-  height: 100vh;
+  min-height: 100vh;
 }
 
 img {
@@ -8,7 +8,7 @@ img {
 }
 
 #root {
-  height: 100%;
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -23,7 +23,7 @@ img {
   box-sizing: border-box;
   position: absolute;
   width: calc(var(--size) * 100%);
-  border: 8px solid #41a9f3;
+  border: 2px solid #41a9f3;
   left: calc(var(--x) * 100%);
   top: calc(var(--y) * 100%);
   transform: translate(calc(var(--dx) * 1px), calc(var(--dy) * 1px));
@@ -34,10 +34,11 @@ img {
 
 .box-label {
   background-color: #41a9f3;
-  padding: 0 8px 8px 0;
+  padding: 0 4px 4px 2px;
+  width: max-content;
+  font-size: 0.6em;
   margin: 0;
   border-bottom-right-radius: 0.5rem;
-  display: inline-block;
 }
 
 .box-wrapper[data-state^='dragging'] {
